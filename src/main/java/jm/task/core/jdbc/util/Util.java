@@ -18,10 +18,8 @@ public class Util {
             Class.forName(DB_DRIVER);
             conn = DriverManager.getConnection(HOST, username, password);
             //conn.setAutoCommit(false);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
         return conn;
     }

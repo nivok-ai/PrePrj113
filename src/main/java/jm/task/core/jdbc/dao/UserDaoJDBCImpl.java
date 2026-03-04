@@ -17,80 +17,55 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
 
-    public void createUsersTable() throws SQLException {
-        Statement statement = null;
-        String sql = "create table IF NOT EXISTS userstable(name varchar(45) null," +
-                "lastname varchar(45) null, age tinyint null," +
-                "id bigint auto_increment primary key);";
-        try {
-            statement = connection.createStatement();
+    public void createUsersTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS userstable(id BIGINT AUTO_INCREMENT PRIMARY KEY," +
+                "name varchar(45)," +
+                "lastname varchar(45), age tinyint)";
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            e.printStackTrace();
         }
     }
 
-    public void dropUsersTable() throws SQLException {
-        Statement statement = null;
-        String sql = "drop table if exists userstable;";
-        try {
-            statement = connection.createStatement();
+    public void dropUsersTable() {
+        String sql = "DROP TABLE IF EXISTS userstable;";
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            e.printStackTrace();
         }
 
     }
 
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
-        PreparedStatement preparedStatement = null;
+    public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO userstable(name, lastname, age) VALUES (?,?,?);";
-        try {
-            preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
         }
     }
 
-    public void removeUserById(long id) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        String sql = "DELETE from userstable where id = ?;";
-        try {
-            preparedStatement = connection.prepareStatement(sql);
+    public void removeUserById(long id) {
+        String sql = "DELETE FROM userstable WHERE id = ?;";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
         }
+
     }
 
 
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() {
         List<User> allUsers = new ArrayList<>();
-        Statement statement = null;
-        String sql = "SELECT name, lastname, age, id from userstable;";
-        try {
-            statement = connection.createStatement();
+        String sql = "SELECT * FROM userstable;";
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
@@ -102,28 +77,18 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
                 allUsers.add(user);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            e.printStackTrace();
         }
         return allUsers;
     }
 
 
-    public void cleanUsersTable() throws SQLException {
-        Statement statement = null;
-        String sql = "TRUNCATE userstable;";
-        try {
-            statement = connection.createStatement();
+    public void cleanUsersTable() {
+        String sql = "TRUNCATE TABLE userstable;";
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            e.printStackTrace();
         }
     }
 }
