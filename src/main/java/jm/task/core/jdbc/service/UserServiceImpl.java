@@ -10,18 +10,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
-    //конструктор для тестирования UserServiceTest
     public UserServiceImpl() {
         this.userDao = new UserDaoJDBCImpl();
     }
 
-    //доп.конструктор для потенциального расширения функционала через обобщённую переменную userDao
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     public void createUsersTable() {
-        // UserDaoJDBCImpl userDaoJDBCimpl = new UserDaoJDBCImpl();
         userDao.createUsersTable();
     }
 
